@@ -51,7 +51,7 @@ function Dashboard() {
 
   return (
     <div className="container px-4 py-8 mx-auto">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Fruit Dashboard</h1>
         <div className="flex space-x-2">
           <button
@@ -69,7 +69,7 @@ function Dashboard() {
         </div>
       </div>
       {showAddModal && (
-        <div className="flex overflow-y-auto fixed inset-0 justify-center items-center w-full h-full bg-gray-600 bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center w-full h-full overflow-y-auto bg-gray-600 bg-opacity-50">
           <div className="p-5 bg-white rounded-lg shadow-xl">
             <h2 className="mb-4 text-xl font-bold">Add New Fruit</h2>
             <form onSubmit={handleAddFruit}>
@@ -78,7 +78,7 @@ function Dashboard() {
                 placeholder="Fruit Name"
                 value={newFruit.fruit_name}
                 onChange={(e) => setNewFruit({ ...newFruit, fruit_name: e.target.value })}
-                className="p-2 mb-4 w-full rounded border"
+                className="w-full p-2 mb-4 border rounded"
                 required
               />
               <input
@@ -86,7 +86,7 @@ function Dashboard() {
                 placeholder="Quantity"
                 value={newFruit.quantity}
                 onChange={(e) => setNewFruit({ ...newFruit, quantity: e.target.value })}
-                className="p-2 mb-4 w-full rounded border"
+                className="w-full p-2 mb-4 border rounded"
                 required
               />
               <div className="flex justify-end space-x-2">
