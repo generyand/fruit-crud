@@ -11,8 +11,11 @@ function FruitTable({ fruits }) {
     // Check if the date is valid
     if (isNaN(date.getTime())) return "Invalid Date";
 
+    // Convert to UTC+8
+    const utc8Date = new Date(date.getTime() + (8 * 60 * 60 * 1000));
+
     // Format the date
-    return date.toLocaleString("en-US", {
+    return utc8Date.toLocaleString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -20,8 +23,8 @@ function FruitTable({ fruits }) {
       minute: "2-digit",
       second: "2-digit",
       timeZone: "UTC",
-      timeZoneName: "short",
-    });
+      hour12: false,
+    }) + " (UTC+8)";
   };
 
   return (
