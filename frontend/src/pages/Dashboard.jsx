@@ -3,7 +3,11 @@ import { FiRefreshCw, FiPlus } from "react-icons/fi";
 import FruitTable from "../components/FruitTable";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
-import { fetchFruits, createFruit, updateFruit, deleteFruit } from "../services/fruitService";
+import {
+  fetchFruits,
+  createFruit,
+  deleteFruit,
+} from "../services/fruitService";
 
 function Dashboard() {
   const [fruits, setFruits] = useState([]);
@@ -42,6 +46,27 @@ function Dashboard() {
     }
   };
 
+  const handleDeleteFruit = async (id) => {
+    try {
+      await deleteFruit(id);
+      await handleFetchFruits();
+    } catch (error) {
+      console.error("Error deleting fruit:", error);
+      setError("Failed to delete fruit. Please try again later.");
+    }
+  };
+
+  const handleEditFruit = async (id) => {
+    try {
+      const data = await fetchFruits();
+      setFruits(data);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching fruits:", error);
+      setError("Failed to fetch fruits. Please try again later.");
+    }
+  };
+
   useEffect(() => {
     handleFetchFruits();
   }, []);
@@ -77,7 +102,9 @@ function Dashboard() {
                 type="text"
                 placeholder="Fruit Name"
                 value={newFruit.fruit_name}
-                onChange={(e) => setNewFruit({ ...newFruit, fruit_name: e.target.value })}
+                onChange={(e) =>
+                  setNewFruit({ ...newFruit, fruit_name: e.target.value })
+                }
                 className="w-full p-2 mb-4 border rounded"
                 required
               />
@@ -85,7 +112,9 @@ function Dashboard() {
                 type="number"
                 placeholder="Quantity"
                 value={newFruit.quantity}
-                onChange={(e) => setNewFruit({ ...newFruit, quantity: e.target.value })}
+                onChange={(e) =>
+                  setNewFruit({ ...newFruit, quantity: e.target.value })
+                }
                 className="w-full p-2 mb-4 border rounded"
                 required
               />
@@ -109,7 +138,7 @@ function Dashboard() {
         </div>
       )}
       {fruits.length > 0 ? (
-        <FruitTable fruits={fruits} />
+        <FruitTable fruits={fruits} handleDeleteFruit={handleDeleteFruit} />
       ) : (
         <p className="mt-4 text-center text-gray-500">No fruits available.</p>
       )}

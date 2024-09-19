@@ -1,7 +1,7 @@
 import React from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
-function FruitTable({ fruits }) {
+function FruitTable({ fruits, handleDeleteFruit }) {
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
 
@@ -12,20 +12,24 @@ function FruitTable({ fruits }) {
     if (isNaN(date.getTime())) return "Invalid Date";
 
     // Convert to UTC+8
-    const utc8Date = new Date(date.getTime() + (8 * 60 * 60 * 1000));
+    const utc8Date = new Date(date.getTime() + 8 * 60 * 60 * 1000);
 
     // Format the date
-    return utc8Date.toLocaleString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      timeZone: "UTC",
-      hour12: false,
-    }) + " (UTC+8)";
+    return (
+      utc8Date.toLocaleString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZone: "UTC",
+        hour12: false,
+      }) + " (UTC+8)"
+    );
   };
+
+  
 
   return (
     <div className="overflow-x-auto bg-white rounded-lg shadow-md">
@@ -60,7 +64,9 @@ function FruitTable({ fruits }) {
                 {fruit.fruit_name.charAt(0).toUpperCase() +
                   fruit.fruit_name.slice(1)}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">{fruit.quantity} pc(s)</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {fruit.quantity} pc(s)
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {formatDate(fruit.created_at)}
               </td>
@@ -71,7 +77,10 @@ function FruitTable({ fruits }) {
                 <button className="mr-3 text-blue-600 hover:text-blue-900">
                   <FiEdit className="inline" />
                 </button>
-                <button className="text-red-600 hover:text-red-900">
+                <button
+                  className="text-red-600 hover:text-red-900"
+                  onClick={() => handleDeleteFruit(fruit.fruit_id)}
+                >
                   <FiTrash2 className="inline" />
                 </button>
               </td>
