@@ -3,7 +3,7 @@ import { FiRefreshCw, FiPlus } from "react-icons/fi";
 import FruitTable from "../components/FruitTable";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
-import { fetchFruits, createFruit } from "../services/fruitService";
+import { fetchFruits, createFruit, updateFruit, deleteFruit } from "../services/fruitService";
 
 function Dashboard() {
   const [fruits, setFruits] = useState([]);

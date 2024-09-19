@@ -60,7 +60,7 @@ function FruitTable({ fruits }) {
                 {fruit.fruit_name.charAt(0).toUpperCase() +
                   fruit.fruit_name.slice(1)}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">{fruit.quantity}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{fruit.quantity} pc(s)</td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {formatDate(fruit.created_at)}
               </td>

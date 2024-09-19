@@ -33,7 +33,7 @@ export const createFruit = async (fruit) => {
 export const updateFruit = async (fruit) => {
   try {
     const response = await axios.put(
-      "http://localhost:3000/api/fruits/update-fruit",
+      `http://localhost:3000/api/fruits/update-fruit/${fruit.fruit_id}`,
       fruit
     );
     return response.data;
