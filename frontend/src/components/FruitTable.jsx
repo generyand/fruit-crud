@@ -1,94 +1,68 @@
 import React from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
-function FruitTable({ fruits, handleDeleteFruit }) {
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-
-    // Parse the date string
-    const date = new Date(dateString);
-
-    // Check if the date is valid
-    if (isNaN(date.getTime())) return "Invalid Date";
-
-    // Convert to UTC+8
-    const utc8Date = new Date(date.getTime() + 8 * 60 * 60 * 1000);
-
-    // Format the date
-    return (
-      utc8Date.toLocaleString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        timeZone: "UTC",
-        hour12: false,
-      }) + " (UTC+8)"
-    );
-  };
-
-  
-
+function FruitTable({ fruits, handleDeleteFruit, handleEditFruit }) {
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-      <table className="min-w-full table-auto">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-              ID
-            </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-              Name
-            </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-              Quantity
-            </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-              Created At
-            </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-              Updated At
-            </th>
-            <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-              Actions
-            </th>
+    <table className="w-full border-collapse table-auto">
+      <thead>
+        <tr className="bg-gray-100 dark:bg-gray-800">
+          <th className="p-2 text-left text-gray-800 dark:text-white">ID</th>
+          <th className="p-2 text-left text-gray-800 dark:text-white">
+            Fruit Name
+          </th>
+          <th className="p-2 text-left text-gray-800 dark:text-white">
+            Quantity
+          </th>
+          <th className="p-2 text-left text-gray-800 dark:text-white">
+            Created At
+          </th>
+          <th className="p-2 text-left text-gray-800 dark:text-white">
+            Updated At
+          </th>
+          <th className="p-2 text-left text-gray-800 dark:text-white">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {fruits.map((fruit) => (
+          <tr
+            key={fruit.fruit_id}
+            className="border-b border-gray-200 dark:border-gray-700"
+          >
+            <td className="p-2 text-gray-800 dark:text-white">
+              {fruit.fruit_id}
+            </td>
+            <td className="p-2 text-gray-800 dark:text-white">
+              {fruit.fruit_name}
+            </td>
+            <td className="p-2 text-gray-800 dark:text-white">
+              {fruit.quantity}
+            </td>
+            <td className="p-2 text-gray-800 dark:text-white">
+              {new Date(fruit.created_at).toLocaleString()}
+            </td>
+            <td className="p-2 text-gray-800 dark:text-white">
+              {new Date(fruit.updated_at).toLocaleString()}
+            </td>
+            <td className="p-2">
+              <button
+                onClick={() => handleEditFruit(fruit.fruit_id)}
+                className="px-2 py-1 mr-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+              >
+                <FiEdit />
+              </button>
+              <button
+                onClick={() => handleDeleteFruit(fruit.fruit_id)}
+                className="px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+              >
+                <FiTrash2 />
+              </button>
+            </td>
           </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {fruits.map((fruit) => (
-            <tr key={fruit.fruit_id} className="hover:bg-gray-50">
-              <td className="px-6 py-4 whitespace-nowrap">{fruit.fruit_id}</td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {fruit.fruit_name.charAt(0).toUpperCase() +
-                  fruit.fruit_name.slice(1)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {fruit.quantity} pc(s)
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {formatDate(fruit.created_at)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {formatDate(fruit.updated_at)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <button className="mr-3 text-blue-600 hover:text-blue-900">
-                  <FiEdit className="inline" />
-                </button>
-                <button
-                  className="text-red-600 hover:text-red-900"
-                  onClick={() => handleDeleteFruit(fruit.fruit_id)}
-                >
-                  <FiTrash2 className="inline" />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
