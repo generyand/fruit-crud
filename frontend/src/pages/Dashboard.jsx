@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { FiRefreshCw, FiPlus, FiMoon, FiSun } from "react-icons/fi";
-import { toast, Toaster } from "sonner";
+import {
+  FiRefreshCw,
+  FiPlus,
+  FiMoon,
+  FiSun,
+  FiCheck,
+  FiAlertTriangle,
+} from "react-icons/fi";
+import { toast } from "sonner";
 import FruitTable from "../components/FruitTable";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
@@ -25,6 +32,42 @@ function Dashboard() {
     handleFetchFruits();
   }, []);
 
+  const getToastStyle = (type) => {
+    const baseStyle = {
+      color: isDarkMode ? "#ffffff" : "#000000",
+      border: `1px solid ${isDarkMode ? "#4B5563" : "#E5E7EB"}`,
+    };
+
+    switch (type) {
+      case "add":
+        return {
+          ...baseStyle,
+          background: isDarkMode ? "#065F46" : "#D1FAE5",
+          color: isDarkMode ? "#ffffff" : "#065F46",
+        };
+      case "update":
+        return {
+          ...baseStyle,
+          background: isDarkMode ? "#1E40AF" : "#DBEAFE",
+          color: isDarkMode ? "#ffffff" : "#1E40AF",
+        };
+      case "delete":
+        return {
+          ...baseStyle,
+          background: isDarkMode ? "#991B1B" : "#FEE2E2",
+          color: isDarkMode ? "#ffffff" : "#991B1B",
+        };
+      case "error":
+        return {
+          ...baseStyle,
+          background: isDarkMode ? "#7F1D1D" : "#FEE2E2",
+          color: isDarkMode ? "#ffffff" : "#991B1B",
+        };
+      default:
+        return baseStyle;
+    }
+  };
+
   const handleFetchFruits = async () => {
     setLoading(true);
     try {
@@ -48,11 +91,17 @@ function Dashboard() {
         setFruits(
           fruits.map((f) => (f.fruit_id === newFruit.fruit_id ? newFruit : f))
         );
-        toast.success(`Fruit "${newFruit.fruit_name}" updated successfully`);
+        toast.success(`Fruit "${newFruit.fruit_name}" updated successfully`, {
+          icon: <FiCheck />,
+          style: getToastStyle("update"),
+        });
       } else {
         newFruit = await createFruit(fruitData);
         setFruits((prevFruits) => [newFruit, ...prevFruits]);
-        toast.success(`New fruit "${newFruit.fruit_name}" added successfully`);
+        toast.success(`New fruit "${newFruit.fruit_name}" added successfully`, {
+          icon: <FiCheck />,
+          style: getToastStyle("add"),
+        });
       }
       handleCloseModal();
     } catch (error) {
@@ -65,7 +114,13 @@ function Dashboard() {
           editingFruit ? "update" : "add"
         } fruit. Please try again later.`
       );
-      toast.error(`Failed to ${editingFruit ? "update" : "add"} fruit: ${error.message}`);
+      toast.error(
+        `Failed to ${editingFruit ? "update" : "add"} fruit: ${error.message}`,
+        {
+          icon: <FiAlertTriangle />,
+          style: getToastStyle("error"),
+        }
+      );
     } finally {
       setLoading(false);
     }
@@ -74,13 +129,19 @@ function Dashboard() {
   const handleDeleteFruit = async (id) => {
     try {
       await deleteFruit(id);
-      const deletedFruit = fruits.find(f => f.fruit_id === id);
+      const deletedFruit = fruits.find((f) => f.fruit_id === id);
       setFruits(fruits.filter((f) => f.fruit_id !== id));
-      toast.success(`Fruit "${deletedFruit.fruit_name}" deleted successfully`);
+      toast.success(`Fruit "${deletedFruit.fruit_name}" deleted successfully`, {
+        icon: <FiCheck />,
+        style: getToastStyle("delete"),
+      });
     } catch (error) {
       console.error("Error deleting fruit:", error);
       setError("Failed to delete fruit. Please try again later.");
-      toast.error(`Failed to delete fruit: ${error.message}`);
+      toast.error(`Failed to delete fruit: ${error.message}`, {
+        icon: <FiAlertTriangle />,
+        style: getToastStyle("error"),
+      });
     }
   };
 
@@ -104,7 +165,6 @@ function Dashboard() {
 
   return (
     <div className="max-w-screen-xl px-4 py-8 mx-auto">
-      <Toaster position="top-right" richColors />
       <DashboardHeader
         onAddFruit={handleAddFruit}
         handleFetchFruits={handleFetchFruits}
