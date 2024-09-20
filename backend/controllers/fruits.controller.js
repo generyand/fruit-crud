@@ -13,13 +13,15 @@ export const getFruits = async (req, res) => {
 export const createFruit = async (req, res) => {
   try {
     const { fruit_name, quantity } = req.body;
-    
+
     // Check if the fruit already exists
     const existingFruit = await FruitModel.findOne({ where: { fruit_name } });
     if (existingFruit) {
-      return res.status(409).json({ success: false, message: "Fruit already exists" });
+      return res
+        .status(409)
+        .json({ success: false, message: "Fruit already exists" });
     }
-    
+
     const fruit = await FruitModel.create({ fruit_name, quantity });
     res.status(201).json({ success: true, data: fruit });
   } catch (error) {
@@ -45,7 +47,10 @@ export const updateFruit = async (req, res) => {
   try {
     const { id } = req.params;
     const { fruit_name, quantity } = req.body;
-    await FruitModel.update({ fruit_name, quantity }, { where: { fruit_id: id } });
+    await FruitModel.update(
+      { fruit_name, quantity },
+      { where: { fruit_id: id } }
+    );
 
     res
       .status(200)
