@@ -52,9 +52,14 @@ export const updateFruit = async (req, res) => {
       { where: { fruit_id: id } }
     );
 
-    res
-      .status(200)
-      .json({ success: true, message: "Fruit updated successfully" });
+    // Fetch the updated fruit
+    const updatedFruit = await FruitModel.findByPk(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Fruit updated successfully",
+      data: updatedFruit,
+    });
   } catch (error) {
     console.error("Error updating fruit:", error);
     res.status(500).json({ success: false, message: "Internal server error" });

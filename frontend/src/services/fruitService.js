@@ -40,7 +40,11 @@ export const updateFruit = async (fruit) => {
       `http://localhost:3000/api/fruits/update-fruit/${fruit.fruit_id}`,
       fruit
     );
-    return response.data;
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    } else {
+      throw new Error("Failed to update fruit");
+    }
   } catch (error) {
     console.error("Error updating fruit:", error);
     throw error;

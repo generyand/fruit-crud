@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FiRefreshCw, FiPlus, FiMoon, FiSun } from "react-icons/fi";
+import { toast, Toaster } from "sonner";
 import FruitTable from "../components/FruitTable";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
-import FruitModal from "../components/FruitModal"; // Make sure this import is correct
+import FruitModal from "../components/FruitModal";
 import {
   fetchFruits,
   createFruit,
@@ -47,9 +48,11 @@ function Dashboard() {
         setFruits(
           fruits.map((f) => (f.fruit_id === newFruit.fruit_id ? newFruit : f))
         );
+        toast.success(`Fruit "${newFruit.fruit_name}" updated successfully`);
       } else {
         newFruit = await createFruit(fruitData);
         setFruits((prevFruits) => [newFruit, ...prevFruits]);
+        toast.success(`New fruit "${newFruit.fruit_name}" added successfully`);
       }
       handleCloseModal();
     } catch (error) {
@@ -62,6 +65,7 @@ function Dashboard() {
           editingFruit ? "update" : "add"
         } fruit. Please try again later.`
       );
+      toast.error(`Failed to ${editingFruit ? "update" : "add"} fruit: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -70,10 +74,13 @@ function Dashboard() {
   const handleDeleteFruit = async (id) => {
     try {
       await deleteFruit(id);
+      const deletedFruit = fruits.find(f => f.fruit_id === id);
       setFruits(fruits.filter((f) => f.fruit_id !== id));
+      toast.success(`Fruit "${deletedFruit.fruit_name}" deleted successfully`);
     } catch (error) {
       console.error("Error deleting fruit:", error);
       setError("Failed to delete fruit. Please try again later.");
+      toast.error(`Failed to delete fruit: ${error.message}`);
     }
   };
 
@@ -97,6 +104,7 @@ function Dashboard() {
 
   return (
     <div className="max-w-screen-xl px-4 py-8 mx-auto">
+      <Toaster position="top-right" richColors />
       <DashboardHeader
         onAddFruit={handleAddFruit}
         handleFetchFruits={handleFetchFruits}
