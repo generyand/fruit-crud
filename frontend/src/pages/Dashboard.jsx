@@ -3,11 +3,12 @@ import { FiRefreshCw, FiPlus, FiMoon, FiSun } from "react-icons/fi";
 import FruitTable from "../components/FruitTable";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
-import AddFruitModal from "../components/AddFruitModal";
+import FruitModal from "../components/FruitModal"; // Make sure this import is correct
 import {
   fetchFruits,
   createFruit,
   deleteFruit,
+  updateFruit,
 } from "../services/fruitService";
 import { useTheme } from "../contexts/ThemeContext";
 
@@ -16,8 +17,8 @@ function Dashboard() {
   const [fruits, setFruits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [newFruit, setNewFruit] = useState({ fruit_name: "", quantity: "" });
+  const [showModal, setShowModal] = useState(false);
+  const [editingFruit, setEditingFruit] = useState(null);
 
   useEffect(() => {
     handleFetchFruits();
@@ -37,17 +38,26 @@ function Dashboard() {
     }
   };
 
-  const handleAddFruit = async (e) => {
-    e.preventDefault();
+  const handleFruitAction = async (fruitData) => {
     setLoading(true);
     try {
-      await createFruit(newFruit);
-      setShowAddModal(false);
-      setNewFruit({ fruit_name: "", quantity: "" });
+      if (editingFruit) {
+        await updateFruit(fruitData);
+      } else {
+        await createFruit(fruitData);
+      }
+      handleCloseModal();
       await handleFetchFruits();
     } catch (error) {
-      console.error("Error adding fruit:", error);
-      setError("Failed to add fruit. Please try again later.");
+      console.error(
+        `Error ${editingFruit ? "updating" : "adding"} fruit:`,
+        error
+      );
+      setError(
+        `Failed to ${
+          editingFruit ? "update" : "add"
+        } fruit. Please try again later.`
+      );
     } finally {
       setLoading(false);
     }
@@ -63,9 +73,19 @@ function Dashboard() {
     }
   };
 
-  const handleEditFruit = async (id) => {
-    console.log("Editing fruit with id:", id);
-    // Implement edit logic here
+  const handleEditFruit = (fruit) => {
+    setEditingFruit(fruit);
+    setShowModal(true);
+  };
+
+  const handleAddFruit = () => {
+    setEditingFruit(null);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setEditingFruit(null);
   };
 
   if (loading) return <LoadingSpinner />;
@@ -74,17 +94,17 @@ function Dashboard() {
   return (
     <div className="max-w-screen-xl px-4 py-8 mx-auto">
       <DashboardHeader
-        setShowAddModal={setShowAddModal}
+        onAddFruit={handleAddFruit}
         handleFetchFruits={handleFetchFruits}
         isDarkMode={isDarkMode}
         toggleTheme={toggleTheme}
       />
-      <AddFruitModal
-        showModal={showAddModal}
-        setShowModal={setShowAddModal}
-        newFruit={newFruit}
-        setNewFruit={setNewFruit}
-        handleAddFruit={handleAddFruit}
+      <FruitModal
+        showModal={showModal}
+        setShowModal={handleCloseModal}
+        fruit={editingFruit || { fruit_name: "", quantity: "" }}
+        onSubmit={handleFruitAction}
+        isEditing={!!editingFruit}
       />
       {fruits.length > 0 ? (
         <FruitTable
@@ -100,7 +120,7 @@ function Dashboard() {
 }
 
 function DashboardHeader({
-  setShowAddModal,
+  onAddFruit,
   handleFetchFruits,
   isDarkMode,
   toggleTheme,
@@ -112,7 +132,7 @@ function DashboardHeader({
       </h1>
       <div className="flex space-x-2">
         <button
-          onClick={() => setShowAddModal(true)}
+          onClick={onAddFruit}
           className="flex items-center px-4 py-2 font-semibold text-white bg-green-500 rounded hover:bg-green-600"
         >
           <FiPlus className="mr-2" /> Add Fruit
