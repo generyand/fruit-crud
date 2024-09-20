@@ -10,7 +10,6 @@ import {
 import { toast } from "sonner";
 import FruitTable from "../components/FruitTable";
 import LoadingSpinner from "../components/LoadingSpinner";
-import ErrorMessage from "../components/ErrorMessage";
 import FruitModal from "../components/FruitModal";
 import {
   fetchFruits,
@@ -161,10 +160,10 @@ function Dashboard() {
   };
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <ErrorMessage message={error} />;
+  // if (error) return <ErrorMessage message={error} />;
 
   return (
-    <div className="max-w-screen-xl px-4 py-8 mx-auto">
+    <div className="px-4 py-8 mx-auto max-w-screen-xl">
       <DashboardHeader
         onAddFruit={handleAddFruit}
         handleFetchFruits={handleFetchFruits}
@@ -177,6 +176,7 @@ function Dashboard() {
         fruit={editingFruit || { fruit_name: "", quantity: "" }}
         onSubmit={handleFruitAction}
         isEditing={!!editingFruit}
+        existingFruits={fruits} // Pass the existing fruits to the modal
       />
       {fruits.length > 0 ? (
         <FruitTable
@@ -198,7 +198,7 @@ function DashboardHeader({
   toggleTheme,
 }) {
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex justify-between items-center mb-6">
       <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
         Fruit Dashboard
       </h1>
