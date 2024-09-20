@@ -23,26 +23,12 @@ function FruitModal({ showModal, setShowModal, fruit, onSubmit, isEditing }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{
-            type: "spring",
-            damping: 20,
-            stiffness: 300,
-            delay: 0,
-            duration: 0.1,
-          }}
           className="fixed inset-0 flex items-center justify-center w-full h-full overflow-y-auto bg-black bg-opacity-40"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            transition={{
-              type: "spring",
-              damping: 20,
-              stiffness: 300,
-              delay: 0,
-              duration: 0.1,
-            }}
             className="p-5 bg-white rounded-lg shadow-xl dark:bg-gray-800"
           >
             <div className="flex items-center justify-between mb-4">
