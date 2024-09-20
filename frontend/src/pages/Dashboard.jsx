@@ -6,6 +6,7 @@ import {
   FiSun,
   FiCheck,
   FiAlertTriangle,
+  FiSearch,
 } from "react-icons/fi";
 import { toast } from "sonner";
 import FruitTable from "../components/FruitTable";
@@ -26,6 +27,7 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [editingFruit, setEditingFruit] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     handleFetchFruits();
@@ -159,16 +161,23 @@ function Dashboard() {
     setEditingFruit(null);
   };
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    // You can implement the search logic here or pass it to a parent component
+  };
+
   if (loading) return <LoadingSpinner />;
   // if (error) return <ErrorMessage message={error} />;
 
   return (
-    <div className="px-4 py-8 mx-auto max-w-screen-xl">
+    <div className="max-w-screen-xl px-4 py-8 mx-auto">
       <DashboardHeader
         onAddFruit={handleAddFruit}
         handleFetchFruits={handleFetchFruits}
         isDarkMode={isDarkMode}
         toggleTheme={toggleTheme}
+        searchTerm={searchTerm}
+        handleSearch={handleSearch}
       />
       <FruitModal
         showModal={showModal}
@@ -196,16 +205,28 @@ function DashboardHeader({
   handleFetchFruits,
   isDarkMode,
   toggleTheme,
+  searchTerm,
+  handleSearch,
 }) {
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex flex-col items-center justify-between mb-6 space-y-4 sm:flex-row sm:space-y-0">
       <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-        Fruit Dashboard
+        Pruts 🍒
       </h1>
-      <div className="flex space-x-2">
+      <div className="flex flex-col items-center space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search fruits..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="py-2 pl-10 pr-4 transition-all duration-200 ease-in-out border rounded-md outline-none focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+          />
+          <FiSearch className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+        </div>
         <button
           onClick={onAddFruit}
-          className="flex items-center px-4 py-2 font-semibold text-white bg-emerald-500 rounded hover:bg-emerald-600"
+          className="flex items-center px-4 py-2 font-semibold text-white rounded bg-emerald-500 hover:bg-emerald-600"
         >
           <FiPlus className="mr-2" /> Add Fruit
         </button>

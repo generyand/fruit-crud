@@ -51,13 +51,13 @@ function FruitTable({ fruits, handleDeleteFruit, handleEditFruit }) {
             <td className="p-4">
               <button
                 onClick={() => handleEditFruit(fruit)}
-                className="px-2 py-1 mr-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+                className="p-2 mr-2 text-white bg-blue-500 rounded hover:bg-blue-600"
               >
                 <FiEdit />
               </button>
               <button
                 onClick={() => handleDeleteFruit(fruit.fruit_id)}
-                className="px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+                className="p-2 text-white bg-red-500 rounded hover:bg-red-600"
               >
                 <FiTrash2 />
               </button>
