@@ -23,7 +23,11 @@ export const createFruit = async (fruit) => {
       "http://localhost:3000/api/fruits/create-fruit",
       fruit
     );
-    return response.data;
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    } else {
+      throw new Error("Failed to create fruit");
+    }
   } catch (error) {
     console.error("Error creating fruit:", error);
     throw error;

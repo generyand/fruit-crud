@@ -41,13 +41,17 @@ function Dashboard() {
   const handleFruitAction = async (fruitData) => {
     setLoading(true);
     try {
+      let newFruit;
       if (editingFruit) {
-        await updateFruit(fruitData);
+        newFruit = await updateFruit(fruitData);
+        setFruits(
+          fruits.map((f) => (f.fruit_id === newFruit.fruit_id ? newFruit : f))
+        );
       } else {
-        await createFruit(fruitData);
+        newFruit = await createFruit(fruitData);
+        setFruits((prevFruits) => [newFruit, ...prevFruits]);
       }
       handleCloseModal();
-      await handleFetchFruits();
     } catch (error) {
       console.error(
         `Error ${editingFruit ? "updating" : "adding"} fruit:`,
@@ -66,7 +70,7 @@ function Dashboard() {
   const handleDeleteFruit = async (id) => {
     try {
       await deleteFruit(id);
-      await handleFetchFruits();
+      setFruits(fruits.filter((f) => f.fruit_id !== id));
     } catch (error) {
       console.error("Error deleting fruit:", error);
       setError("Failed to delete fruit. Please try again later.");
