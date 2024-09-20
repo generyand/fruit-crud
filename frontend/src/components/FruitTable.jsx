@@ -1,12 +1,13 @@
 import React from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import moment from "moment";
 
 function FruitTable({ fruits, handleDeleteFruit, handleEditFruit }) {
   // Sort fruits by fruit_id in ascending order
   const sortedFruits = [...fruits].sort((a, b) => a.fruit_id - b.fruit_id);
 
   return (
-    <table className="w-full border-collapse table-auto">
+    <table className="overflow-hidden w-full rounded-lg border-collapse table-auto">
       <thead>
         <tr className="bg-gray-100 dark:bg-gray-800">
           <th className="p-4 text-left text-gray-800 dark:text-white">ID</th>
@@ -43,10 +44,10 @@ function FruitTable({ fruits, handleDeleteFruit, handleEditFruit }) {
               {fruit.quantity}
             </td>
             <td className="p-4 text-gray-800 dark:text-white">
-              {new Date(fruit.created_at).toLocaleString()}
+              {moment(fruit.created_at).format("lll")}
             </td>
             <td className="p-4 text-gray-800 dark:text-white">
-              {new Date(fruit.updated_at).toLocaleString()}
+              {moment(fruit.updated_at).format("lll")}
             </td>
             <td className="p-4">
               <button

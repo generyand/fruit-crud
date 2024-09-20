@@ -1,6 +1,6 @@
-import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
-import pkg from 'pg';
+import { Sequelize } from "sequelize";
+import dotenv from "dotenv";
+import pkg from "pg";
 const { Client } = pkg;
 
 dotenv.config();
@@ -18,8 +18,9 @@ const createDatabase = async () => {
     await client.connect();
     await client.query(`CREATE DATABASE ${process.env.DB_NAME}`);
   } catch (err) {
-    if (err.code !== '42P04') { // 42P04 is the error code for "database already exists"
-      console.error('Error creating database:', err);
+    if (err.code !== "42P04") {
+      // 42P04 is the error code for "database already exists"
+      console.error("Error creating database:", err);
     }
   } finally {
     await client.end();
@@ -28,10 +29,15 @@ const createDatabase = async () => {
 
 await createDatabase();
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  dialect: 'postgres',
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    dialect: "postgres",
+  }
+);
 
 export default sequelize;
