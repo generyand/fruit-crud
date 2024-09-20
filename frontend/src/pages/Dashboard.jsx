@@ -33,27 +33,27 @@ function Dashboard() {
 
   const getToastStyle = (type) => {
     const baseStyle = {
-      color: isDarkMode ? "#ffffff" : "#000000",
-      border: `1px solid ${isDarkMode ? "#4B5563" : "#E5E7EB"}`,
+      color: isDarkMode ? "#f2f2f2" : "#1c1c1c",
+      // border: `1px solid ${isDarkMode ? "#4B5563" : "#E5E7EB"}`,
     };
 
     switch (type) {
       case "add":
         return {
           ...baseStyle,
-          background: isDarkMode ? "#065F46" : "#D1FAE5",
+          background: isDarkMode ? "#10b981" : "#D1FAE5",
           color: isDarkMode ? "#ffffff" : "#065F46",
         };
       case "update":
         return {
           ...baseStyle,
-          background: isDarkMode ? "#1E40AF" : "#DBEAFE",
+          background: isDarkMode ? "#3b82f6" : "#DBEAFE",
           color: isDarkMode ? "#ffffff" : "#1E40AF",
         };
       case "delete":
         return {
           ...baseStyle,
-          background: isDarkMode ? "#991B1B" : "#FEE2E2",
+          background: isDarkMode ? "#ef4444" : "#FEE2E2",
           color: isDarkMode ? "#ffffff" : "#991B1B",
         };
       case "error":
@@ -205,7 +205,7 @@ function DashboardHeader({
       <div className="flex space-x-2">
         <button
           onClick={onAddFruit}
-          className="flex items-center px-4 py-2 font-semibold text-white bg-green-500 rounded hover:bg-green-600"
+          className="flex items-center px-4 py-2 font-semibold text-white bg-emerald-500 rounded hover:bg-emerald-600"
         >
           <FiPlus className="mr-2" /> Add Fruit
         </button>

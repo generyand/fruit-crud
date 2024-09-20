@@ -112,6 +112,7 @@ function FruitModal({
                 Fruit Name
               </label>
               <input
+                autocomplete="off"
                 id="fruit-name"
                 type="text"
                 value={formData.fruit_name}
@@ -129,6 +130,7 @@ function FruitModal({
                 Quantity
               </label>
               <input
+                autocomplete="off"
                 id="quantity"
                 type="number"
                 value={formData.quantity}
@@ -156,7 +158,7 @@ function FruitModal({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
+                  className="px-4 py-2 text-white bg-emerald-500 rounded hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700"
                 >
                   {isEditing ? "Update Fruit" : "Add Fruit"}
                 </button>

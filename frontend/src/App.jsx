@@ -8,8 +8,8 @@ function AppContent() {
   const { isDarkMode } = useTheme();
 
   return (
-    <div className="min-h-screen transition-colors duration-200 bg-white dark:bg-gray-900">
-      <Toaster theme={isDarkMode ? "dark" : "light"} position="bottom-center" />
+    <div className="min-h-screen bg-white transition-colors duration-200 dark:bg-gray-900">
+      <Toaster theme={isDarkMode ? "dark" : "light"} position="top-center" />
       <Routes>
         <Route path="/" element={<Dashboard />} />
       </Routes>
