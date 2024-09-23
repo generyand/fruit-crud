@@ -7,7 +7,7 @@ function FruitTable({ fruits, handleDeleteFruit, handleEditFruit }) {
   const sortedFruits = [...fruits].sort((a, b) => a.fruit_id - b.fruit_id);
 
   return (
-    <table className="overflow-hidden w-full rounded-lg border-collapse table-auto">
+    <table className="w-full overflow-hidden border-collapse rounded-lg table-auto">
       <thead>
         <tr className="bg-gray-100 dark:bg-gray-800">
           <th className="p-4 text-left text-gray-800 dark:text-white">ID</th>

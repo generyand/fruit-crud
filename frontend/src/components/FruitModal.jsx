@@ -76,7 +76,7 @@ function FruitModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="flex overflow-y-auto fixed inset-0 justify-center items-center w-full h-full bg-black bg-opacity-40"
+          className="fixed inset-0 flex items-center justify-center w-full h-full overflow-y-auto bg-black bg-opacity-40"
           onClick={handleOutsideClick}
           role="dialog"
           aria-modal="true"
@@ -86,10 +86,10 @@ function FruitModal({
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="p-5 w-full max-w-md bg-white rounded-lg shadow-xl dark:bg-gray-800"
+            className="w-full max-w-md p-5 bg-white rounded-lg shadow-xl dark:bg-gray-800"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center justify-between mb-4">
               <h2
                 id="modal-title"
                 className="text-xl font-bold text-gray-800 dark:text-white"
@@ -120,7 +120,7 @@ function FruitModal({
                   setFormData({ ...formData, fruit_name: e.target.value })
                 }
                 autoFocus
-                className="p-2 mb-4 w-full text-gray-800 bg-white rounded border border-gray-300 transition-all duration-200 ease-in-out appearance-none outline-none focus:border-transparent focus:ring-blue-500 focus:ring-2 focus:outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                className="w-full p-2 mb-4 text-gray-800 transition-all duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none appearance-none focus:border-transparent focus:ring-blue-500 focus:ring-2 focus:outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600"
                 required
               />
               <label
@@ -137,7 +137,7 @@ function FruitModal({
                 onChange={(e) =>
                   setFormData({ ...formData, quantity: e.target.value })
                 }
-                className="p-2 mb-4 w-full text-gray-800 bg-white rounded border border-gray-300 transition-all duration-200 ease-in-out appearance-none outline-none focus:border-transparent focus:ring-blue-500 focus:ring-2 focus:outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                className="w-full p-2 mb-4 text-gray-800 transition-all duration-200 ease-in-out bg-white border border-gray-300 rounded outline-none appearance-none focus:border-transparent focus:ring-blue-500 focus:ring-2 focus:outline-none dark:bg-gray-700 dark:text-white dark:border-gray-600"
                 required
               />
               {errorMessage && (
@@ -158,7 +158,7 @@ function FruitModal({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-white bg-emerald-500 rounded hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                  className="px-4 py-2 text-white rounded bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700"
                 >
                   {isEditing ? "Update Fruit" : "Add Fruit"}
                 </button>
