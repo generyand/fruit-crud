@@ -1,72 +1,70 @@
 import React from "react";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { FiEdit, FiTrash } from "react-icons/fi";
 import moment from "moment";
 
 function FruitTable({ fruits, handleDeleteFruit, handleEditFruit }) {
-  // Sort fruits by fruit_id in ascending order
-  const sortedFruits = [...fruits].sort((a, b) => a.fruit_id - b.fruit_id);
-
   return (
-    <table className="overflow-hidden w-full rounded-lg border-collapse table-auto">
-      <thead>
-        <tr className="bg-gray-100 dark:bg-gray-800">
-          <th className="p-4 text-left text-gray-800 dark:text-white">ID</th>
-          <th className="p-4 text-left text-gray-800 dark:text-white">
-            Fruit Name
+    <div className="overflow-x-auto rounded-lg">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead className="bg-gray-50 dark:bg-gray-700">
+        <tr>
+          <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
+            ID
           </th>
-          <th className="p-4 text-left text-gray-800 dark:text-white">
+          <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
+            Name
+          </th>
+          <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
             Quantity
           </th>
-          <th className="p-4 text-left text-gray-800 dark:text-white">
+          <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
             Created At
           </th>
-          <th className="p-4 text-left text-gray-800 dark:text-white">
-            Updated At
+          <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
+            Edited At
           </th>
-          <th className="p-4 text-left text-gray-800 dark:text-white">
+          <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">
             Actions
           </th>
         </tr>
       </thead>
-      <tbody>
-        {sortedFruits.map((fruit) => (
-          <tr
-            key={fruit.fruit_id}
-            className="border-b border-gray-200 dark:border-gray-700"
-          >
-            <td className="p-4 text-gray-800 dark:text-white">
+      <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+        {fruits.map((fruit) => (
+          <tr key={fruit.fruit_id}>
+            <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-200">
               {fruit.fruit_id}
             </td>
-            <td className="p-4 text-gray-800 dark:text-white">
+            <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-gray-200">
               {fruit.fruit_name}
             </td>
-            <td className="p-4 text-gray-800 dark:text-white">
+            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-300">
               {fruit.quantity}
             </td>
-            <td className="p-4 text-gray-800 dark:text-white">
+            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-300">
               {moment(fruit.created_at).format("lll")}
             </td>
-            <td className="p-4 text-gray-800 dark:text-white">
-              {moment(fruit.updated_at).format("lll")}
+            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-300">
+              {moment(fruit.edited_at).format("lll")}
             </td>
-            <td className="p-4">
+            <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
               <button
                 onClick={() => handleEditFruit(fruit)}
-                className="p-2 mr-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+                className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-600"
               >
                 <FiEdit />
               </button>
               <button
-                onClick={() => handleDeleteFruit(fruit.fruit_id)}
-                className="p-2 text-white bg-red-500 rounded hover:bg-red-600"
+                onClick={() => handleDeleteFruit(fruit)}
+                className="ml-4 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-600"
               >
-                <FiTrash2 />
+                <FiTrash />
               </button>
             </td>
           </tr>
         ))}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   );
 }
 

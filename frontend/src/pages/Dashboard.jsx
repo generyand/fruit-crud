@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import FruitTable from "../components/FruitTable";
 import LoadingSpinner from "../components/LoadingSpinner";
 import FruitModal from "../components/FruitModal";
+import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 import {
   fetchFruits,
   createFruit,
@@ -29,6 +30,8 @@ function Dashboard() {
   const [editingFruit, setEditingFruit] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredFruits, setFilteredFruits] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [fruitToDelete, setFruitToDelete] = useState(null);
 
   useEffect(() => {
     handleFetchFruits();
@@ -135,15 +138,16 @@ function Dashboard() {
     }
   };
 
-  const handleDeleteFruit = async (id) => {
+  const handleDeleteFruit = async () => {
     try {
-      await deleteFruit(id);
-      const deletedFruit = fruits.find((f) => f.fruit_id === id);
-      setFruits(fruits.filter((f) => f.fruit_id !== id));
-      toast.success(`Fruit "${deletedFruit.fruit_name}" deleted successfully`, {
+      await deleteFruit(fruitToDelete.fruit_id);
+      setFruits(fruits.filter((f) => f.fruit_id !== fruitToDelete.fruit_id));
+      toast.success(`Fruit "${fruitToDelete.fruit_name}" deleted successfully`, {
         icon: <FiCheck />,
         style: getToastStyle("delete"),
       });
+      setShowDeleteModal(false);
+      setFruitToDelete(null);
     } catch (error) {
       console.error("Error deleting fruit:", error);
       setError("Failed to delete fruit. Please try again later.");
@@ -152,6 +156,11 @@ function Dashboard() {
         style: getToastStyle("error"),
       });
     }
+  };
+
+  const confirmDeleteFruit = (fruit) => {
+    setFruitToDelete(fruit);
+    setShowDeleteModal(true);
   };
 
   const handleEditFruit = (fruit) => {
@@ -177,7 +186,7 @@ function Dashboard() {
   // if (error) return <ErrorMessage message={error} />;
 
   return (
-    <div className="max-w-screen-xl px-4 py-8 mx-auto">
+    <div className="px-4 py-8 mx-auto max-w-screen-xl">
       <DashboardHeader
         onAddFruit={handleAddFruit}
         handleFetchFruits={handleFetchFruits}
@@ -194,19 +203,17 @@ function Dashboard() {
         isEditing={!!editingFruit}
         existingFruits={fruits} // Pass the existing fruits to the modal
       />
-      {filteredFruits.length > 0 ? (
-        <FruitTable
-          fruits={filteredFruits}
-          handleDeleteFruit={handleDeleteFruit}
-          handleEditFruit={handleEditFruit}
-        />
-      ) : (
-        <p className="mt-4 text-center text-gray-500">
-          {searchTerm
-            ? "No fruits found matching your search."
-            : "No fruits available."}
-        </p>
-      )}
+      <FruitTable
+        fruits={filteredFruits}
+        handleDeleteFruit={confirmDeleteFruit}
+        handleEditFruit={handleEditFruit}
+      />
+      <DeleteConfirmationModal
+        showModal={showDeleteModal}
+        setShowModal={setShowDeleteModal}
+        onConfirm={handleDeleteFruit}
+        fruitName={fruitToDelete ? fruitToDelete.fruit_name : ""}
+      />
     </div>
   );
 }
@@ -220,14 +227,14 @@ function DashboardHeader({
   handleSearch,
 }) {
   return (
-    <div className="flex flex-col items-center justify-between mb-6 space-y-4 sm:flex-row sm:space-y-0">
+    <div className="flex flex-col justify-between items-center mb-6 space-y-4 sm:flex-row sm:space-y-0">
       <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
         Proots 🍒
       </h1>
       <div className="flex flex-col items-center space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
         <button
           onClick={onAddFruit}
-          className="flex items-center px-4 py-2 font-semibold text-white rounded bg-emerald-500 hover:bg-emerald-600"
+          className="flex items-center px-4 py-2 font-semibold text-white bg-emerald-500 rounded hover:bg-emerald-600"
         >
           <FiPlus className="mr-2" /> Add Fruit
         </button>
@@ -237,9 +244,9 @@ function DashboardHeader({
             placeholder="Search fruits..."
             value={searchTerm}
             onChange={handleSearch}
-            className="py-2 pl-10 pr-4 transition-all duration-200 ease-in-out border rounded-md outline-none focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+            className="py-2 pr-4 pl-10 rounded-md border transition-all duration-200 ease-in-out outline-none focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:text-white dark:border-gray-600"
           />
-          <FiSearch className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+          <FiSearch className="absolute left-3 top-1/2 text-gray-400 transform -translate-y-1/2" />
         </div>
         {/* <button
           onClick={handleFetchFruits}
