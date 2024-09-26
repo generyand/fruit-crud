@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   FiRefreshCw,
   FiPlus,
@@ -29,13 +29,38 @@ function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [editingFruit, setEditingFruit] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [filteredFruits, setFilteredFruits] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [fruitToDelete, setFruitToDelete] = useState(null);
 
   useEffect(() => {
-    handleFetchFruits();
+    const timerId = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [searchTerm]);
+
+  const handleFetchFruits = useCallback(async (search = "") => {
+    setLoading(true);
+    try {
+      const data = await fetchFruits(search);
+      setFruits(data);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching fruits:", error);
+      setError("Failed to fetch fruits. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    handleFetchFruits();
+  }, [handleFetchFruits]);
 
   useEffect(() => {
     const filtered = fruits.filter((fruit) =>
@@ -80,20 +105,6 @@ function Dashboard() {
     }
   };
 
-  const handleFetchFruits = async () => {
-    setLoading(true);
-    try {
-      const data = await fetchFruits();
-      setFruits(data);
-      setError(null);
-    } catch (error) {
-      console.error("Error fetching fruits:", error);
-      setError("Failed to fetch fruits. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleFruitAction = async (fruitData) => {
     setLoading(true);
     try {
@@ -109,7 +120,7 @@ function Dashboard() {
         });
       } else {
         newFruit = await createFruit(fruitData);
-        setFruits((prevFruits) => [newFruit, ...prevFruits]);
+        setFruits((prevFruits) => [...prevFruits, newFruit]); // Changed this line
         toast.success(`New fruit "${newFruit.fruit_name}" added successfully`, {
           icon: <FiCheck />,
           style: getToastStyle("add"),
@@ -182,6 +193,11 @@ function Dashboard() {
     setSearchTerm(event.target.value);
   };
 
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    handleFetchFruits(searchTerm);
+  };
+
   if (loading) return <LoadingSpinner />;
   // if (error) return <ErrorMessage message={error} />;
 
@@ -194,6 +210,7 @@ function Dashboard() {
         toggleTheme={toggleTheme}
         searchTerm={searchTerm}
         handleSearch={handleSearch}
+        handleSearchSubmit={handleSearchSubmit}
       />
       <FruitModal
         showModal={showModal}
@@ -204,7 +221,7 @@ function Dashboard() {
         existingFruits={fruits} // Pass the existing fruits to the modal
       />
       <FruitTable
-        fruits={filteredFruits}
+        fruits={fruits}
         handleDeleteFruit={confirmDeleteFruit}
         handleEditFruit={handleEditFruit}
       />
@@ -225,6 +242,7 @@ function DashboardHeader({
   toggleTheme,
   searchTerm,
   handleSearch,
+  handleSearchSubmit,
 }) {
   return (
     <div className="flex flex-col justify-between items-center mb-6 space-y-4 sm:flex-row sm:space-y-0">
@@ -238,7 +256,7 @@ function DashboardHeader({
         >
           <FiPlus className="mr-2" /> Add Fruit
         </button>
-        <div className="relative">
+        <form onSubmit={handleSearchSubmit} className="relative">
           <input
             type="text"
             placeholder="Search fruits..."
@@ -247,13 +265,7 @@ function DashboardHeader({
             className="py-2 pr-4 pl-10 rounded-md border transition-all duration-200 ease-in-out outline-none focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:text-white dark:border-gray-600"
           />
           <FiSearch className="absolute left-3 top-1/2 text-gray-400 transform -translate-y-1/2" />
-        </div>
-        {/* <button
-          onClick={handleFetchFruits}
-          className="flex items-center px-4 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600"
-        >
-          <FiRefreshCw className="mr-2" /> Refresh
-        </button> */}
+        </form>
         <button
           onClick={toggleTheme}
           className="flex items-center px-4 py-2 font-semibold text-yellow-500 rounded dark:text-gray-400"

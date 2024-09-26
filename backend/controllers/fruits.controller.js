@@ -1,8 +1,23 @@
 import FruitModel from "../models/fruit.model.js";
+import { Op } from "sequelize"; // Assuming Op is imported from sequelize
 
 export const getFruits = async (req, res) => {
   try {
-    const fruits = await FruitModel.findAll();
+    const { search } = req.query;
+    let fruits;
+
+    if (search) {
+      fruits = await FruitModel.findAll({
+        where: {
+          fruit_name: {
+            [Op.iLike]: `%${search}%`
+          }
+        }
+      });
+    } else {
+      fruits = await FruitModel.findAll();
+    }
+
     res.status(200).json({ success: true, data: fruits });
   } catch (error) {
     console.error("Error fetching fruits:", error);

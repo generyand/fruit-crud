@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const fetchFruits = async () => {
+export const fetchFruits = async (searchTerm = "") => {
   try {
     const response = await axios.get(
-      "http://localhost:3000/api/fruits/get-fruits"
+      `http://localhost:3000/api/fruits/get-fruits${searchTerm ? `?search=${searchTerm}` : ""}`
     );
     if (response.data.success && Array.isArray(response.data.data)) {
       return response.data.data;
